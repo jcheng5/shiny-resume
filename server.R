@@ -1,11 +1,13 @@
-# initialize state containers
-r_data <<- reactiveValues()
-r_data$cars <- mtcars
-r_state <<- list()
-
 source("session.R")
 
 function(input, output, session) {
+
+  source("state.R", local = TRUE)
+
+  # initialize state containers
+  r_data <- reactiveValues()
+  r_data$clicks <- 0
+  r_state <- list()
 
   # The call to manageSession starts a new session, but if we are continuing a
   # previous session it first calls restore() with the saved data.
@@ -17,30 +19,49 @@ function(input, output, session) {
       reactiveValuesToList(r_data)
     }),
     restore = function(data) {
-      r_data <- data$r_data
+      r_data <<- do.call(reactiveValues, data$r_data)
       r_state <<- data$r_state
+
+      r_data$clicks <- r_data[["clicks"]]
+      updateNumericInput(session, "remember", value = r_state[["remember"]])
     }
   )
   output$ui_state <- renderUI({
+    vals <- c("a","b","c")
     # select for single value
     tagList(
-      selectInput("select_one", label = "Select:", choices = c("a","b","c"),
-        selected = state_init("select_one"), multiple = FALSE),
-      selectInput("select_multiple", label = "Select:", choices = c("a","b","c"),
-        selected = state_init_list("select_one"), multiple = FALSE),
+      tags$textarea(id="message", rows="2", class="form-control",
+        state_init("message","[empty]")),
+      radioButtons("radio", label = "Option:", choices = vals,
+        selected = state_init("radio", "a"), inline = TRUE),
+      checkboxGroupInput("check", label = "Options:", choices = vals,
+        selected = state_init("check", "a"), inline = TRUE),
+      selectInput("select_one", label = "Select one:", choices = vals,
+        selected = state_single("select_one", vals), multiple = FALSE),
+      selectInput("select_two", label = "Select two (or more):", choices = vals,
+        selected = state_multiple("select_two", vals), multiple = TRUE)
     )
-
   })
 
-#   observeEvent(input$click, {
-#     v$clicks <- v$clicks + 1
-#   })
+  observeEvent(input$click, {
+    r_data$clicks <- r_data$clicks + 1
+  })
 
-#   output$clickCount <- renderText({
-#     v$clicks
-#   })
+  output$values_selected <- renderPrint({
+    cat("Click count: ")
+    cat(r_data$clicks)
+    cat("\nSelected one: ")
+    cat(input$select_one)
+    cat("\nSelected two: ")
+    cat(input$select_two)
+    cat("\nRemember: ")
+    cat(input$remember)
+  })
 
-  output$value_selected <- renderText({
-    input$select_one
+  output$state_values <- renderPrint({
+    cat("r_data:\n")
+    print(reactiveValuesToList(r_data))
+    cat("\nr_state:\n")
+    print(r_state)
   })
 }

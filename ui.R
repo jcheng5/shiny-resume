@@ -4,20 +4,9 @@ fluidPage(
 
   h3("Saving state demo"),
   hr(),
-
-  # testing with different inputs
-#   textInput("rename", "", input$dataset),
-
   uiOutput("ui_state"),
-  textOutput("value_selected")
-
-#   br(),
-#   actionButton("click", "Click me"),
-#   br(),
-#   "Clicks:",
-#   textOutput("clickCount", container = span),
-#   hr(),
-#   numericInput("remember", "Remember this value:", 0),
-#   hr(),
-#   textOutput("value_selected")
+  actionButton("click", "Click me"),
+  numericInput("remember", "Remember this value:", 0),
+  verbatimTextOutput("values_selected"),
+  verbatimTextOutput("state_values")
 )
