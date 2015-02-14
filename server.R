@@ -62,6 +62,10 @@ function(input, output, session) {
     cat("r_data:\n")
     print(reactiveValuesToList(r_data))
     cat("\nr_state:\n")
-    print(r_state)
+    if(length(r_state) == 0)
+      cat("[empty]")
+    else
+      str(r_state[sort(names(r_state))])
+
   })
 }
