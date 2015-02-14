@@ -6,7 +6,7 @@ manageSession <- function(save, restore, session = getDefaultReactiveDomain()) {
 
   isolate({
     params <- parseQueryString(session$clientData$url_search)
-    prevSSUID = params[["SSUID"]]
+    prevSSUID <- params[["SSUID"]]
     if (!is.null(prevSSUID)) {
       if (!is.null(sessionStore[[prevSSUID]])) {
         restore(sessionStore[[prevSSUID]]$data)
@@ -14,7 +14,11 @@ manageSession <- function(save, restore, session = getDefaultReactiveDomain()) {
     }
   })
 
-  ssuid <- shiny:::createUniqueId(16)
+  if(is.null(prevSSUID))
+    ssuid <- shiny:::createUniqueId(16)
+  else
+    ssuid <- prevSSUID
+
   session$sendCustomMessage("session_start", ssuid)
   observe({
     tryCatch(
