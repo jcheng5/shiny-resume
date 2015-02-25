@@ -20,5 +20,8 @@ Shiny.addCustomMessageHandler("session_start", function(data) {
     search += "SSUID=" + encodeURIComponent(data);
   }
 
-  history.replaceState(null, null, search);
+  // Work around ShinyApps.io/SSP/RSC base href silliness
+  var path = location.pathname.replace(/\/_w_(\w+)/, '');
+
+  history.replaceState(null, null, path + search);
 })
