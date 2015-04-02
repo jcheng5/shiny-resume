@@ -9,10 +9,12 @@ function(input, output, session) {
   r_state <- list()
 
   # the default approach in shiny apps
-  source("../../R/state.R", local = TRUE)
+#   source("../../R/state.R", local = TRUE)
 
   # trying import
-  # import::here(resume, state_init, state_single, state_multiple)
+#   import::here(resume, state_init, state_single, state_multiple)
+#   import::here(.from = resume, state_init, state_single, state_multiple)
+  import::here(state_init, state_single, state_multiple, .from = resume)
 
   # this would be nice
   # import::here(resume, state*)
