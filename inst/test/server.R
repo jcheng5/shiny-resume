@@ -1,6 +1,24 @@
 source("session.R")
 library(magrittr)
 
+# a few utility funcs, might as well take them from `import`
+import::here(symbol_list, symbol_as_character, .from = import)
+
+copy_from <- function(.from, ...) {
+  symbols <- symbol_list(...)
+  parent  <- parent.frame()
+  from    <- symbol_as_character(substitute(.from))
+
+  for (s in seq_along(symbols)) {
+    fn <- get(symbols[s], envir = asNamespace(from), inherits = TRUE)
+    assign(names(symbols)[s],
+           eval.parent(call("function", formals(fn), body(fn))),
+           parent)
+  }
+
+  invisible(NULL)
+}
+
 function(input, output, session) {
 
   # initialize state containers
@@ -9,12 +27,14 @@ function(input, output, session) {
   r_state <- list()
 
   # the default approach in shiny apps
-#   source("../../R/state.R", local = TRUE)
+  #   source("../../R/state.R", local = TRUE)
 
   # trying import
-#   import::here(resume, state_init, state_single, state_multiple)
-#   import::here(.from = resume, state_init, state_single, state_multiple)
-  import::here(state_init, state_single, state_multiple, .from = resume)
+  # import::here(resume, state_init, state_single, state_multiple)
+  # import::here(.from = resume, state_init, state_single, state_multiple)
+  # import::here(state_init, state_single, state_multiple, .from = resume)
+
+  copy_from(resume, state_init, state_single, state_multiple)
 
   # this would be nice
   # import::here(resume, state*)
