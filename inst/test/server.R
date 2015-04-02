@@ -3,6 +3,11 @@ library(magrittr)
 
 function(input, output, session) {
 
+  # initialize state containers
+  r_data <- reactiveValues()
+  r_data$clicks <- 0
+  r_state <- list()
+
   # the default approach in shiny apps
   # source("../../R/state.R", local = TRUE)
 
@@ -11,11 +16,6 @@ function(input, output, session) {
 
   # this would be nice
   # import::here(resume, state*)
-
-  # initialize state containers
-  r_data <- reactiveValues()
-  r_data$clicks <- 0
-  r_state <- list()
 
   # The call to manageSession starts a new session, but if we are continuing a
   # previous session it first calls restore() with the saved data.
