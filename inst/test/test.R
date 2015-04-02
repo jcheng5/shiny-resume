@@ -7,9 +7,6 @@ test <- function() {
 
   r_state <- list()
   state_init("test") %>% print
-  state_init("test",0) %>% print
-  r_state$test <- c("a","b")
-  state_init("test",0) %>% print
 
 }
 
