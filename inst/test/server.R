@@ -1,8 +1,16 @@
 source("session.R")
+library(magrittr)
 
 function(input, output, session) {
 
-  source("state.R", local = TRUE)
+  # the default approach in shiny apps
+  # source("../../R/state.R", local = TRUE)
+
+  # trying import
+  import::here(resume, state_init, state_single, state_multiple)
+
+  # this would be nice
+  # import::here(resume, state*)
 
   # initialize state containers
   r_data <- reactiveValues()
